@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/event.css">
+    <title>Event Catalog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        table {
+            width: 70%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            margin-left: 180px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        caption {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .filter-container {
+            margin-bottom: 20px;
+        }
+        .filter-container input {
+            padding: 8px;
+            font-size: 16px;
+            margin-left: 40px;
+            width: 40%;
+        }
+        .ellipsis {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-container button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #submitButton {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #submitButton:hover {
+            background-color: #45a049;
+        }
+        #updateButton {
+            background-color: #2196F3;
+            color: white;
+        }
+        #updateButton:hover {
+            background-color: #0b7dda;
+        }
+        #deleteButton {
+            background-color: #f44336;
+            color: white;
+        }
+        #deleteButton:hover {
+            background-color: #da190b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Event Catalog</h1>
+    <div class="filter-container">
+        <label for="filter" style="margin-left: 20%;">Filter by Event Title:</label>
+        <input type="text" id="filter" placeholder="Enter event title...">
+    </div>
+    <table id="eventsTable">
+        <caption>Event Catalog</caption>
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th onclick="sortTable(1)">Event Date</th>
+                <th onclick="sortTable(2)">Event Title</th>
+                <th>Event Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>2024-08-15</td>
+                <td>Annual Gala</td>
+                <td class="ellipsis">A grand evening of celebration with awards and dinner. This is a longer description that should be truncated with an ellipsis when it overflows.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>2024-09-10</td>
+                <td>Tech Conference</td>
+                <td class="ellipsis">A conference showcasing the latest in technology and innovation. This description is also quite lengthy and should be truncated.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>2024-10-05</td>
+                <td>Charity Auction</td>
+                <td class="ellipsis">An auction event to raise funds for various charities. The description will be truncated to fit within the container.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="button-container">
+        <button id="submitButton">SUBMIT</button>
+        <button id="updateButton"><a href="update.html">UPDATE</a></button>
+        <button id="deleteButton"><a href="delete.html">DELETE</a></button>
+    </div>
+
+    <script>
+        // Function to sort table columns
+        function sortTable(n) {
+            const table = document.getElementById("eventsTable");
+            const rows = Array.from(table.getElementsByTagName("TR")).slice(1); // Exclude header row
+            const isAscending = table.getElementsByTagName("TH")[n].classList.toggle("asc");
+
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.getElementsByTagName("TD")[n].innerText;
+                const cellB = rowB.getElementsByTagName("TD")[n].innerText;
+                return isAscending
+                    ? cellA.localeCompare(cellB)
+                    : cellB.localeCompare(cellA);
+            });
+
+            rows.forEach(row => table.getElementsByTagName("TBODY")[0].appendChild(row));
+        }
+
+        // Function to filter table rows
+        document.getElementById("filter").addEventListener("keyup", function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#eventsTable tbody tr");
+
+            rows.forEach(row => {
+                const cells = row.getElementsByTagName("TD");
+                const eventTitle = cells[2].textContent.toLowerCase();
+                row.style.display = eventTitle.includes(filter) ? "" : "none";
+            });
+        });
+    </script>
+</body>
+</html>
